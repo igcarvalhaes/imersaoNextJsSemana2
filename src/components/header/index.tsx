@@ -19,8 +19,11 @@ export function Header() {
             </Link>
           </li>
           <li>
-            <Link href="/api" className="hover:text-main-orange-color text-2xl">
-              API
+            <Link
+              href="/posts"
+              className="hover:text-main-orange-color text-2xl"
+            >
+              Posts
             </Link>
           </li>
         </ul>
