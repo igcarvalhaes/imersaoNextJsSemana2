@@ -3,7 +3,7 @@ import { Poppins } from "next/font/google"; // Importa fonte do Google Fonts
 import "./globals.css";
 
 // Importa componentes compartilhados
-import { Header } from "../components/header";
+import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 
 // Configuração da fonte Poppins otimizada pelo Next.js

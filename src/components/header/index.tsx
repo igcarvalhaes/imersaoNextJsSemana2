@@ -8,7 +8,12 @@ export function Header() {
       {/* Navegação com flexbox para distribuir elementos */}
       <nav className="h-full flex items-center justify-evenly">
         {/* Logo/título da aplicação */}
-        <div className="text-4xl font-bold">Next.Js</div>
+        <div className="text-4xl font-bold">
+          {/* Link do Next.js - otimizado para navegação SPA */}
+          <Link href="/" className="hover:text-main-orange-color">
+            NextJs
+          </Link>
+        </div>
 
         {/* Menu de navegação */}
         <ul className="flex space-x-10 md:gap-20">

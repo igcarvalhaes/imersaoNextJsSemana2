@@ -274,24 +274,147 @@ npm start
 | **Performance** | Manual                | Otimizada por padrão    |
 | **SEO**         | SPA limitado          | SSR/SSG nativo          |
 
-## 🎯 Próximos passos (Semana 2)
+## ✅ **Implementações Finalizadas na Semana 2**
 
-- [ ] Roteamento dinâmico `[id]`
-- [ ] API Routes
-- [ ] Server Components vs Client Components
-- [ ] Data Fetching (fetch, cache)
-- [ ] Loading states e Error boundaries
+### 🗄️ **Banco de Dados SQLite + Prisma ORM**
 
-## 📝 Conceitos aprendidos
+**Configuração completa:**
 
-✅ **App Router** - Sistema de roteamento baseado em arquivos  
-✅ **Layout System** - Layouts compartilhados entre páginas  
-✅ **next/font/google** - Otimização automática de fontes  
-✅ **next/image** - Componente otimizado para imagens  
-✅ **Tailwind CSS v4** - Cores customizadas com @theme  
-✅ **Sticky Footer** - Layout responsivo com flexbox  
-✅ **Componentização** - Estrutura organizada de componentes
+```prisma
+// prisma/schema.prisma
+model Post {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  title     String
+  body      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+```
+
+**Cliente Prisma global:**
+
+```typescript
+// src/lib/prisma.ts
+import { PrismaClient } from "@prisma/client";
+
+export const prisma = globalForPrisma.prisma ?? new PrismaClient();
+```
+
+### 🔧 **Arquitetura Server + Client Components**
+
+**Server Component (página principal):**
+
+```typescript
+// src/app/posts/page.tsx
+export default async function Posts() {
+  const posts = await getPosts(); // ✅ Busca no servidor
+
+  return (
+    <div>
+      <PostForm /> {/* Client Component */}
+      <PostList posts={posts} /> {/* Server Component */}
+    </div>
+  );
+}
+```
+
+**Client Components específicos:**
+
+```typescript
+// src/components/PostForm.tsx - Formulário interativo
+// src/components/DeleteButton.tsx - Botão com ação
+```
+
+### 📊 **CRUD Completo com API Routes**
+
+**GET - Listar posts:**
+
+```typescript
+export async function GET() {
+  const posts = await prisma.post.findMany({
+    orderBy: { createdAt: "desc" },
+  });
+  return NextResponse.json(posts);
+}
+```
+
+**POST - Criar post:**
+
+```typescript
+export async function POST(request: Request) {
+  const { userId, title, body } = await request.json();
+  const newPost = await prisma.post.create({ data: { userId, title, body } });
+  return NextResponse.json(newPost, { status: 201 });
+}
+```
+
+**DELETE - Remover post:**
+
+```typescript
+export async function DELETE(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const id = searchParams.get("id");
+  await prisma.post.delete({ where: { id: Number(id) } });
+  return NextResponse.json({ message: "Post deletado" });
+}
+```
+
+### 🔄 **Revalidação com useRouter**
+
+```typescript
+import { useRouter } from "next/navigation";
+
+const router = useRouter();
+
+// Após criar/deletar post
+router.refresh(); // ✅ Revalida dados do servidor
+```
+
+## 📝 Conceitos Dominados
+
+### ✅ **Fundamentos (Semana 1)**
+
+- **App Router** - Sistema de roteamento baseado em arquivos
+- **Layout System** - Layouts compartilhados entre páginas
+- **next/font/google** - Otimização automática de fontes
+- **next/image** - Componente otimizado para imagens
+- **Tailwind CSS v4** - Cores customizadas com @theme
+- **Componentização** - Estrutura organizada de componentes
+
+### 🆕 **Avançado (Semana 2)**
+
+- **SQLite + Prisma ORM** - Banco local com TypeScript type-safe
+- **Server vs Client Components** - Arquitetura híbrida otimizada
+- **API Routes robustas** - CRUD completo com validação
+- **Data Fetching no servidor** - Performance sem loading states
+- **useRouter + refresh()** - Revalidação automática de dados
+- **Componentização estratégica** - Client apenas onde necessário
+- **Seeds e Migrations** - Versionamento de banco estruturado
+- **Error Handling completo** - UX consistente em toda aplicação
+
+## 🛠️ Stack Tecnológica Final
+
+- **Framework**: Next.js 15 (App Router + TypeScript)
+- **Banco de Dados**: SQLite local para desenvolvimento
+- **ORM**: Prisma Client com migrations e seeds automáticas
+- **Arquitetura**: Server Components + Client Components híbrida
+- **Styling**: Tailwind CSS v4 com sistema de cores customizado
+- **Navegação**: useRouter com refresh() para revalidação de dados
+- **Tipagem**: TypeScript strict mode end-to-end (banco → UI)
+- **Fonte**: Poppins otimizada via next/font/google
+
+## 📊 Diferencial da Semana 2
+
+| Antes (Semana 1)        | Depois (Semana 2)                |
+| ----------------------- | -------------------------------- |
+| **Dados**: Estáticos    | **Dados**: Banco SQLite real     |
+| **Componentes**: Client | **Componentes**: Server + Client |
+| **Estado**: Local       | **Estado**: Servidor             |
+| **Performance**: Média  | **Performance**: Otimizada       |
+| **SEO**: Limitado       | **SEO**: Completo                |
+| **Persistência**: Não   | **Persistência**: Sim            |
 
 ---
 
-**Serra Jr Engenharia** - Imersão Next.js 2025
+**Serra Jr Engenharia** - Imersão Next.js 2025 | Semana 2 Finalizada
